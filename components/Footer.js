@@ -1,15 +1,27 @@
 export default function Footer() {
   return (
-    <footer className="bg-dark text-white text-center py-3">
+    <footer className="bg-dark text-white text-center py-4">
       <p>&copy; 2024 Favorite Cities App. All rights reserved.</p>
-      <div>
-        <a href="/about" className="text-white mx-3">
-          About Us
+      <p>
+        Built with ❤️ using{" "}
+        <a
+          href="https://nextjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-white"
+        >
+          Next.js
+        </a>{" "}
+        &amp;{" "}
+        <a
+          href="https://getbootstrap.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-white"
+        >
+          Bootstrap
         </a>
-        <a href="/contact" className="text-white mx-3">
-          Contact
-        </a>
-      </div>
+      </p>
     </footer>
   );
 }

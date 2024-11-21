@@ -61,9 +61,7 @@ export default function SearchPage() {
         {results.map((city, index) => (
           <li key={index} className="list-group-item">
             <Link href={`/cities/${encodeURIComponent(city.name)}`}>
-              <a>
-                {city.name}, {city.country}
-              </a>
+              {city.name}, {city.country}
             </Link>
           </li>
         ))}
