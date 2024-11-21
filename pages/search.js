@@ -1,62 +1,73 @@
 import { useState } from "react";
-import { useRouter } from "next/router";
+import axios from "axios";
+import Link from "next/link";
 
 export default function SearchPage() {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSearch = async () => {
-    if (!searchTerm) return;
+  const handleSearch = async (e) => {
+    e.preventDefault();
 
+    if (!query) return;
+
+    setLoading(true);
+    setError(null);
     try {
-      // Fetch coordinates from Open-Meteo Geocoding API
-      const response = await fetch(
-        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
-          searchTerm
-        )}`
+      const response = await axios.get(
+        "https://geocoding-api.open-meteo.com/v1/search",
+        {
+          params: {
+            name: query,
+            language: "en",
+            count: 5, // Optional: Limit the number of results
+          },
+        }
       );
-      const data = await response.json();
 
-      // Set the results, or an empty array if there are no matches
-      setResults(data.results || []);
+      setResults(response.data.results); // Store the results
     } catch (error) {
-      console.error("Error fetching city data:", error);
-      setResults([]);
+      setError("Error fetching data");
+      console.error("Error fetching geocoding data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleCityClick = (cityName) => {
-    router.push(`/city/${encodeURIComponent(cityName)}`);
-  };
-
   return (
-    <div>
+    <div className="container mt-5">
       <h1>Search for a City</h1>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="Enter city name"
-      />
-      <button onClick={handleSearch}>Search</button>
+      <form onSubmit={handleSearch}>
+        <div className="form-group">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter city name"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </div>
+        <button type="submit" className="btn btn-primary btn-block mt-3">
+          Search
+        </button>
+      </form>
 
-      {results.length > 0 ? (
-        <ul>
-          {results.map((city) => (
-            <li key={city.id}>
-              <a
-                onClick={() => handleCityClick(city.id)}
-                style={{ cursor: "pointer" }}
-              >
-                {city.name} - {city.country}
+      {loading && <p>Loading...</p>}
+      {error && <p className="text-danger">{error}</p>}
+
+      <ul className="list-group mt-4">
+        {results.map((city, index) => (
+          <li key={index} className="list-group-item">
+            <Link href={`/cities/${encodeURIComponent(city.name)}`}>
+              <a>
+                {city.name}, {city.country}
               </a>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No results found.</p>
-      )}
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

@@ -9,7 +9,7 @@ export default function Navbar() {
       <Link href="/search" passHref style={{ margin: "0 10px" }}>
         Search
       </Link>
-      <Link href="/city" passHref style={{ margin: "0 10px" }}>
+      <Link href="/cities/[city]" passHref style={{ margin: "0 10px" }}>
         City
       </Link>
       <Link href="/favorites" passHref style={{ margin: "0 10px" }}>
