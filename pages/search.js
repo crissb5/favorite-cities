@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import LogoutButton from "@/components/LogoutButton";
 
 export default function SearchPage() {
   const [query, setQuery] = useState("");
